@@ -120,4 +120,4 @@ markup:
     guessSyntax: true
     noClasses: true
     tabWidth: 4
-    style: monokai
+    style: 
