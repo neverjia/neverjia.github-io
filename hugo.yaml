@@ -13,7 +13,7 @@ hasCJKLanguage: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false
-googleAnalytics: G-9W28F9LP0J
+#googleAnalytics: G-9W28F9LP0J
 paginate: 10   
 summaryLength: 800
 permalinks:
