@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>yum源相关使用 | MiJia&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="以下是一篇关于使用配置云主机Yum源的使用文档大纲： 一、引言 文档目的 文档可能适用于那些需要配置自定义Yum源的用户，或者那些在使用CentOS 7云主机时遇到Yum源配置问题的用户。 适用范围 术语和定义 二、Yum源简介 Yum是什么 Yum源（Yellowdog Updater Modified源）是指存放软件包及其相关信息的服务器或存储库。在基于 RPM 包管理的 Linux 系统中，如 CentOS、Red Hat Enterprise Linux（RHEL）等，Yum源是用来提供软件包下载和安装的地方。 Yum源的作用 Yum源是用于在Linux系统上安装、更新和删除软件包的软件管理工具。 Yum源配置文件 Yum源的配置文件位于/etc/yum.repos.d/目录下，每个仓库都有一个独立的配置文件。 三、配置Yum源 备份原有Yum源配置文件 mkdir /etc/yum.repos.d/backup cp -r /etc/yum.repos.d/ /etc/yum.repos.d/backup 配置Yum源： 1）打开终端或远程登录到云主机。 2）切换到root用户或以具有sudo特权的用户身份运行以下命令。 3）进入/etc/yum.repos.d/目录：cd /etc/yum.repos.d/ 4）创建一个新的仓库配置文件，例如local.repo：vi local.repo。 5）在编辑模式下，添加以下内容到文件中： [myrepo] name=My Yum Repository baseurl=http://example.com/yum/repository/ enabled=1 gpgcheck=1 gpgkey=http://example.com/yum/RPM-GPG-KEY-MyRepo #解释名词 #name：仓库的名称。 #baseurl：仓库的基本URL，即存储软件包的位置。 #enabled：设置为1以启用仓库。 #gpgcheck：设置为1以启用GPG密钥校验。 #gpgkey：GPG密钥的URL #保存和退出： #按下Esc键退出编辑模式。 #输入:wq保存文件并退出Vi编辑器。 #运行以下命令以清除、更新Yum缓存 yum clean all yum makecache #测试安装检查yum源是否可用,替换package_name为要安装的实际软件包的名称。 # yum install package_name 运行 yum repolist 命令，检查已配置的 Yum 源列表是否正确显示。 四、常见问题及解决方案 无法解析软件包名称或版本 # 1.错误的软件包名称或版本：请确保您输入的软件包名称和版本号是正确的。验证拼写">
+<meta name="author" content="">
+<link rel="canonical" href="https://neverjia.github.io/yum%E6%BA%90%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://neverjia.github.io/img/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://neverjia.github.io/img/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://neverjia.github.io/img/favicon.png">
+<link rel="apple-touch-icon" href="https://neverjia.github.io/img/favicon.png">
+<link rel="mask-icon" href="https://neverjia.github.io/img/favicon.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="yum源相关使用" />
+<meta property="og:description" content="以下是一篇关于使用配置云主机Yum源的使用文档大纲： 一、引言 文档目的 文档可能适用于那些需要配置自定义Yum源的用户，或者那些在使用CentOS 7云主机时遇到Yum源配置问题的用户。 适用范围 术语和定义 二、Yum源简介 Yum是什么 Yum源（Yellowdog Updater Modified源）是指存放软件包及其相关信息的服务器或存储库。在基于 RPM 包管理的 Linux 系统中，如 CentOS、Red Hat Enterprise Linux（RHEL）等，Yum源是用来提供软件包下载和安装的地方。 Yum源的作用 Yum源是用于在Linux系统上安装、更新和删除软件包的软件管理工具。 Yum源配置文件 Yum源的配置文件位于/etc/yum.repos.d/目录下，每个仓库都有一个独立的配置文件。 三、配置Yum源 备份原有Yum源配置文件 mkdir /etc/yum.repos.d/backup cp -r /etc/yum.repos.d/ /etc/yum.repos.d/backup 配置Yum源： 1）打开终端或远程登录到云主机。 2）切换到root用户或以具有sudo特权的用户身份运行以下命令。 3）进入/etc/yum.repos.d/目录：cd /etc/yum.repos.d/ 4）创建一个新的仓库配置文件，例如local.repo：vi local.repo。 5）在编辑模式下，添加以下内容到文件中： [myrepo] name=My Yum Repository baseurl=http://example.com/yum/repository/ enabled=1 gpgcheck=1 gpgkey=http://example.com/yum/RPM-GPG-KEY-MyRepo #解释名词 #name：仓库的名称。 #baseurl：仓库的基本URL，即存储软件包的位置。 #enabled：设置为1以启用仓库。 #gpgcheck：设置为1以启用GPG密钥校验。 #gpgkey：GPG密钥的URL #保存和退出： #按下Esc键退出编辑模式。 #输入:wq保存文件并退出Vi编辑器。 #运行以下命令以清除、更新Yum缓存 yum clean all yum makecache #测试安装检查yum源是否可用,替换package_name为要安装的实际软件包的名称。 # yum install package_name 运行 yum repolist 命令，检查已配置的 Yum 源列表是否正确显示。 四、常见问题及解决方案 无法解析软件包名称或版本 # 1.错误的软件包名称或版本：请确保您输入的软件包名称和版本号是正确的。验证拼写" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://neverjia.github.io/yum%E6%BA%90%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-03-24T23:11:36+08:00" />
+<meta property="article:modified_time" content="2024-03-24T23:11:36+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="yum源相关使用"/>
+<meta name="twitter:description" content="以下是一篇关于使用配置云主机Yum源的使用文档大纲： 一、引言 文档目的 文档可能适用于那些需要配置自定义Yum源的用户，或者那些在使用CentOS 7云主机时遇到Yum源配置问题的用户。 适用范围 术语和定义 二、Yum源简介 Yum是什么 Yum源（Yellowdog Updater Modified源）是指存放软件包及其相关信息的服务器或存储库。在基于 RPM 包管理的 Linux 系统中，如 CentOS、Red Hat Enterprise Linux（RHEL）等，Yum源是用来提供软件包下载和安装的地方。 Yum源的作用 Yum源是用于在Linux系统上安装、更新和删除软件包的软件管理工具。 Yum源配置文件 Yum源的配置文件位于/etc/yum.repos.d/目录下，每个仓库都有一个独立的配置文件。 三、配置Yum源 备份原有Yum源配置文件 mkdir /etc/yum.repos.d/backup cp -r /etc/yum.repos.d/ /etc/yum.repos.d/backup 配置Yum源： 1）打开终端或远程登录到云主机。 2）切换到root用户或以具有sudo特权的用户身份运行以下命令。 3）进入/etc/yum.repos.d/目录：cd /etc/yum.repos.d/ 4）创建一个新的仓库配置文件，例如local.repo：vi local.repo。 5）在编辑模式下，添加以下内容到文件中： [myrepo] name=My Yum Repository baseurl=http://example.com/yum/repository/ enabled=1 gpgcheck=1 gpgkey=http://example.com/yum/RPM-GPG-KEY-MyRepo #解释名词 #name：仓库的名称。 #baseurl：仓库的基本URL，即存储软件包的位置。 #enabled：设置为1以启用仓库。 #gpgcheck：设置为1以启用GPG密钥校验。 #gpgkey：GPG密钥的URL #保存和退出： #按下Esc键退出编辑模式。 #输入:wq保存文件并退出Vi编辑器。 #运行以下命令以清除、更新Yum缓存 yum clean all yum makecache #测试安装检查yum源是否可用,替换package_name为要安装的实际软件包的名称。 # yum install package_name 运行 yum repolist 命令，检查已配置的 Yum 源列表是否正确显示。 四、常见问题及解决方案 无法解析软件包名称或版本 # 1.错误的软件包名称或版本：请确保您输入的软件包名称和版本号是正确的。验证拼写"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://neverjia.github.io/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "yum源相关使用",
+      "item": "https://neverjia.github.io/yum%E6%BA%90%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "yum源相关使用",
+  "name": "yum源相关使用",
+  "description": "以下是一篇关于使用配置云主机Yum源的使用文档大纲： 一、引言 文档目的 文档可能适用于那些需要配置自定义Yum源的用户，或者那些在使用CentOS 7云主机时遇到Yum源配置问题的用户。 适用范围 术语和定义 二、Yum源简介 Yum是什么 Yum源（Yellowdog Updater Modified源）是指存放软件包及其相关信息的服务器或存储库。在基于 RPM 包管理的 Linux 系统中，如 CentOS、Red Hat Enterprise Linux（RHEL）等，Yum源是用来提供软件包下载和安装的地方。 Yum源的作用 Yum源是用于在Linux系统上安装、更新和删除软件包的软件管理工具。 Yum源配置文件 Yum源的配置文件位于/etc/yum.repos.d/目录下，每个仓库都有一个独立的配置文件。 三、配置Yum源 备份原有Yum源配置文件 mkdir /etc/yum.repos.d/backup cp -r /etc/yum.repos.d/ /etc/yum.repos.d/backup 配置Yum源： 1）打开终端或远程登录到云主机。 2）切换到root用户或以具有sudo特权的用户身份运行以下命令。 3）进入/etc/yum.repos.d/目录：cd /etc/yum.repos.d/ 4）创建一个新的仓库配置文件，例如local.repo：vi local.repo。 5）在编辑模式下，添加以下内容到文件中： [myrepo] name=My Yum Repository baseurl=http://example.com/yum/repository/ enabled=1 gpgcheck=1 gpgkey=http://example.com/yum/RPM-GPG-KEY-MyRepo #解释名词 #name：仓库的名称。 #baseurl：仓库的基本URL，即存储软件包的位置。 #enabled：设置为1以启用仓库。 #gpgcheck：设置为1以启用GPG密钥校验。 #gpgkey：GPG密钥的URL #保存和退出： #按下Esc键退出编辑模式。 #输入:wq保存文件并退出Vi编辑器。 #运行以下命令以清除、更新Yum缓存 yum clean all yum makecache #测试安装检查yum源是否可用,替换package_name为要安装的实际软件包的名称。 # yum install package_name 运行 yum repolist 命令，检查已配置的 Yum 源列表是否正确显示。 四、常见问题及解决方案 无法解析软件包名称或版本 # 1.错误的软件包名称或版本：请确保您输入的软件包名称和版本号是正确的。验证拼写",
+  "keywords": [
+    
+  ],
+  "articleBody": "以下是一篇关于使用配置云主机Yum源的使用文档大纲：\n一、引言 文档目的\n文档可能适用于那些需要配置自定义Yum源的用户，或者那些在使用CentOS 7云主机时遇到Yum源配置问题的用户。\n适用范围\n术语和定义\n二、Yum源简介 Yum是什么\nYum源（Yellowdog Updater Modified源）是指存放软件包及其相关信息的服务器或存储库。在基于 RPM 包管理的 Linux 系统中，如 CentOS、Red Hat Enterprise Linux（RHEL）等，Yum源是用来提供软件包下载和安装的地方。\nYum源的作用\nYum源是用于在Linux系统上安装、更新和删除软件包的软件管理工具。\nYum源配置文件\nYum源的配置文件位于/etc/yum.repos.d/目录下，每个仓库都有一个独立的配置文件。\n三、配置Yum源 备份原有Yum源配置文件\nmkdir /etc/yum.repos.d/backup cp -r /etc/yum.repos.d/ /etc/yum.repos.d/backup 配置Yum源：\n1）打开终端或远程登录到云主机。\n2）切换到root用户或以具有sudo特权的用户身份运行以下命令。\n3）进入/etc/yum.repos.d/目录：cd /etc/yum.repos.d/\n4）创建一个新的仓库配置文件，例如local.repo：vi local.repo。\n5）在编辑模式下，添加以下内容到文件中：\n[myrepo] name=My Yum Repository baseurl=http://example.com/yum/repository/ enabled=1 gpgcheck=1 gpgkey=http://example.com/yum/RPM-GPG-KEY-MyRepo #解释名词 #name：仓库的名称。 #baseurl：仓库的基本URL，即存储软件包的位置。 #enabled：设置为1以启用仓库。 #gpgcheck：设置为1以启用GPG密钥校验。 #gpgkey：GPG密钥的URL #保存和退出： #按下Esc键退出编辑模式。 #输入:wq保存文件并退出Vi编辑器。 #运行以下命令以清除、更新Yum缓存 yum clean all yum makecache #测试安装检查yum源是否可用,替换package_name为要安装的实际软件包的名称。 # yum install package_name 运行 yum repolist 命令，检查已配置的 Yum 源列表是否正确显示。 四、常见问题及解决方案 无法解析软件包名称或版本\n# 1.错误的软件包名称或版本：请确保您输入的软件包名称和版本号是正确的。验证拼写和版本号是否准确，以及软件包名称是否与仓库中的可用软件包匹配。 # 2.无效的Yum源配置：检查您的Yum源配置文件是否正确。验证配置文件中的仓库名称、URL和其他参数是否正确，并确保Yum源服务器可访问。 # 3.网络连接问题：如果您的云主机无法连接到Yum源服务器，将无法解析软件包。确保您的主机具有可用的网络连接，并检查防火墙设置是否允许对Yum源的访问。 # 4.仓库未启用或已删除：如果您使用的仓库未启用或已删除，Yum将无法找到相应的软件包。检查您的Yum源配置文件中仓库的enabled参数是否设置为1，并确保仓库仍然可用。 # 5.Yum缓存失效：Yum会缓存软件包的元数据以提高性能。如果Yum缓存已过期或损坏，可能会导致无法解析软件包。尝试清除Yum缓存并重新生成它，使用以下命令： yum clean all yum makecache 网络连接问题\n# 1.使用ping命令验证您是否可以与外部服务器进行通信。如果ping命令无法成功，可能是网络配置或连接问题。请检查网络设置、防火墙、代理服务器等，确保网络连接正常。 ping www.baidu.com.com ping 8.8.8.8 ping 114.114.114.114 # 2.检查DNS设置：Yum源的域名解析依赖于DNS服务器。确保您的主机的DNS设置正确，并且可以解析Yum源服务器的域名。您可以尝试使用nslookup命令来验证域名解析是否正常。例如： #nslookup yum源服务器的域名 # 3.检查Yum源配置：验证您的Yum源配置是否正确，并且Yum源服务器的URL地址是正确的。检查/etc/yum.repos.d/目录中的配置文件，并确保URL地址可以被主机访问。尝试使用浏览器或curl命令访问Yum源的URL地址，例如 #curl yum源服务器的URL地址 # 4.将Yum源的URL地址更改为其他可用的镜像站点地址。 # 5.检查防火墙设置：防火墙规则可能会阻止主机与Yum源服务器之间的通信。确保防火墙允许主机访问Yum源服务器的相关端口（通常是80或443）。 GPG密钥验证失败\n# 1.更新GPG密钥：首先，尝试更新GPG密钥。运行以下命令来获取最新的GPG密钥 sudo yum update gnupg # 2.导入缺失的GPG密钥：如果GPG密钥验证失败是因为缺少某个特定仓库的密钥，您可以尝试手动导入缺失的GPG密钥。一般情况下，仓库提供商会在其网站上提供公钥文件。您可以使用rpm命令导入密钥，例如： sudo rpm --import 公钥文件路径 # 3.禁用GPG密钥验证（不推荐）：如果您确定仓库是可信的，但仍然遇到GPG密钥验证失败的问题，您可以尝试在Yum配置中禁用GPG密钥验证。编辑相应的Yum源配置文件（位于/etc/yum.repos.d/目录中），并在文件的顶部添加或修改gpgcheck参数为0， gpgcheck=0 # 4.解决GPG密钥服务器访问问题：有时，GPG密钥验证失败是因为无法访问密钥服务器。您可以尝试使用代理服务器或更改密钥服务器的URL地址。在Yum源配置文件中查找gpgkey行，将其更改为其他可用的密钥服务器URL地址。 软件包依赖问题\n#使用yum命令解决依赖关系 sudo yum install 软件包名称 #手动安装依赖软件包 sudo yum install 缺失的依赖软件包名称 #添加其他软件源 #升级或降级软件包 # 使用yum update命令升级软件包，或使用yum downgrade命令降级软件包。 #寻求第三方软件源或仓库 #手动编译和安装 五、最佳实践 使用国内Yum源\n阿里云 Yum 源 阿里云提供了自己的 Yum 源服务，可以访问 https://mirrors.aliyun.com/yum/ 查看详细信息和配置方法。 网易（163）Yum 源 网易也提供了 Yum 源服务，可以访问 https://mirrors.163.com/ 查看详细信息和配置方法。 清华大学 Yum 源 清华大学开源软件镜像站也提供了 Yum 源服务，可以访问 https://mirrors.tuna.tsinghua.edu.cn/help/centos/ 查看详细信息和配置方法。 中国科学技术大学 Yum 源 中国科学技术大学开源软件镜像站也提供了 Yum 源服务，可以访问 https://mirrors.ustc.edu.cn/help/centos.html 查看详细信息和配置方法。 定期更新Yum源\n编辑 Yum 源配置文件： 打开 /etc/yum.repos.d/ 目录下的 Yum 源配置文件，你可以使用文本编辑器如 Vim 或 Nano 进行编辑。 确保你已经配置了需要更新的 Yum 源，可以是官方源或者你选择的国内镜像源。 运行 Yum 清理命令： 在更新 Yum 源之前，你可以先运行 yum clean all 命令，清理 Yum 缓存，以确保后续操作能够正常进行。 更新 Yum 源： 运行 yum makecache 命令，它会更新本地 Yum 缓存，以反映最新的软件包信息和 Yum 源配置。 执行软件包更新： 如果你希望一并更新系统中已安装的软件包，可以运行 yum update 命令。这将检查可用的更新并安装它们。 检查更新日志（可选）： 在更新 Yum 源和软件包后，你可以查看系统的更新日志，以了解具体更新了哪些软件包以及可能的重要信息。 配置多个Yum源\n# 打开 /etc/yum.repos.d/ 目录，使用文本编辑器创建或编辑新的 Yum 源配置文件，可以使用 .repo 作为文件后缀。 # 选择性地启用或禁用 Yum 源： # 根据需要选择性地启用或禁用已配置的 Yum 源，可以使用 yum-config-manager --enable 或 yum-config-manager --disable 命令。 六、附录 常用Yum命令\n安装指定名称的软件包及其依赖项。 yum install ： 更新系统中已安装的所有软件包到最新版本。 yum update： 卸载指定名称的软件包。 yum remove ： 在 Yum 源中搜索包含指定关键字的软件包。 yum search ： 列出系统中所有已安装的软件包，或者列出特定软件包的信息。 yum list []： 显示指定软件包的详细信息，包括版本、大小、依赖关系等。 yum info ： 清除 Yum 缓存，包括元数据和软件包。 yum clean all： 显示当前 Yum 源的列表以及每个源中可用的软件包数量。 yum repolist： 显示软件包安装、更新和删除的历史记录。 yum history： 启用指定名称的 Yum 源。 yum-config-manager --enable ： 禁用指定名称的 Yum 源。 yum-config-manager --disable ： 显示指定软件包的依赖关系列表。 yum deplist ： ",
+  "wordCount" : "3118",
+  "inLanguage": "en",
+  "datePublished": "2024-03-24T23:11:36+08:00",
+  "dateModified": "2024-03-24T23:11:36+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://neverjia.github.io/yum%E6%BA%90%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "MiJia's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://neverjia.github.io/img/favicon.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://neverjia.github.io/" accesskey="h" title="MiJia&#39;s Blog (Alt + H)">MiJia&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://neverjia.github.io/post/" title="Post">
+                    <span>Post</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://neverjia.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://neverjia.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://neverjia.github.io/friend" title="Friend">
+                    <span>Friend</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://neverjia.github.io/about" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      yum源相关使用
+    </h1>
+    <div class="post-meta">
+
+
+
+
+
+
+
+
+
+
+创建:&nbsp;<span title='2024-03-24 23:11:36 +0800 CST'>242411-11-110</span>&nbsp;|&nbsp;字数:&nbsp;3118字&nbsp;|&nbsp;时长: 7分钟&nbsp;|&nbsp;<a href="https://github.com/neverjia/neverjia.github.io/tree/main/content/post/yum%e6%ba%90%e4%bd%bf%e7%94%a8.md" rel="noopener noreferrer" target="_blank">Edit</a>
+
+&nbsp;|&nbsp;标签: &nbsp;
+    </div>
+  </header> <aside id="toc-container" class="toc-container wide">
+        <div class="toc">
+            <details  open>
+                <summary accesskey="c" title="(Alt + C)">
+                    <span class="details">Table of Contents</span>
+                </summary>
+
+                <div class="inner"><ul>
+                        <li>
+                            <a href="#%e4%b8%80%e5%bc%95%e8%a8%80" aria-label="一、引言">一、引言</a></li>
+                        <li>
+                            <a href="#%e4%ba%8cyum%e6%ba%90%e7%ae%80%e4%bb%8b" aria-label="二、Yum源简介">二、Yum源简介</a></li>
+                        <li>
+                            <a href="#%e4%b8%89%e9%85%8d%e7%bd%aeyum%e6%ba%90" aria-label="三、配置Yum源">三、配置Yum源</a></li>
+                        <li>
+                            <a href="#%e5%9b%9b%e5%b8%b8%e8%a7%81%e9%97%ae%e9%a2%98%e5%8f%8a%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" aria-label="四、常见问题及解决方案">四、常见问题及解决方案</a></li>
+                        <li>
+                            <a href="#%e4%ba%94%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5" aria-label="五、最佳实践">五、最佳实践</a></li>
+                        <li>
+                            <a href="#%e5%85%ad%e9%99%84%e5%bd%95" aria-label="六、附录">六、附录</a>
+                        </li>
+                    </ul>
+                </div>
+            </details>
+        </div>
+    </aside>
+    <script>
+        let activeElement;
+        let elements;
+        window.addEventListener('DOMContentLoaded', function (event) {
+            checkTocPosition();
+
+            elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }, false);
+
+        window.addEventListener('resize', function (event) {
+            checkTocPosition();
+        }, false);
+
+        window.addEventListener('scroll', () => {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement) {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }, false);
+
+        const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+        const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+        const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+        function checkTocPosition() {
+            const width = document.body.scrollWidth;
+
+            if (width - main - (toc * 2) - (gap * 4) > 0) {
+                document.getElementById("toc-container").classList.add("wide");
+            } else {
+                document.getElementById("toc-container").classList.remove("wide");
+            }
+        }
+
+        function getOffsetTop(element) {
+            if (!element.getClientRects().length) {
+                return 0;
+            }
+            let rect = element.getBoundingClientRect();
+            let win = element.ownerDocument.defaultView;
+            return rect.top + win.pageYOffset;
+        }
+    </script>
+  <div class="post-content"><p>以下是一篇关于使用配置云主机Yum源的使用文档大纲：</p>
+<h2 id="一引言">一、引言<a hidden class="anchor" aria-hidden="true" href="#一引言">#</a></h2>
+<ol>
+<li>
+<p>文档目的</p>
+<p>文档可能适用于那些需要配置自定义Yum源的用户，或者那些在使用CentOS 7云主机时遇到Yum源配置问题的用户。</p>
+</li>
+<li>
+<p>适用范围</p>
+</li>
+<li>
+<p>术语和定义</p>
+</li>
+</ol>
+<h2 id="二yum源简介">二、Yum源简介<a hidden class="anchor" aria-hidden="true" href="#二yum源简介">#</a></h2>
+<ol>
+<li>
+<p>Yum是什么</p>
+<p>Yum源（Yellowdog Updater Modified源）是指存放软件包及其相关信息的服务器或存储库。在基于 RPM 包管理的 Linux 系统中，如 CentOS、Red Hat Enterprise Linux（RHEL）等，Yum源是用来提供软件包下载和安装的地方。</p>
+</li>
+<li>
+<p>Yum源的作用</p>
+<p>Yum源是用于在Linux系统上安装、更新和删除软件包的软件管理工具。</p>
+</li>
+<li>
+<p>Yum源配置文件</p>
+<p>Yum源的配置文件位于/etc/yum.repos.d/目录下，每个仓库都有一个独立的配置文件。</p>
+</li>
+</ol>
+<h2 id="三配置yum源">三、配置Yum源<a hidden class="anchor" aria-hidden="true" href="#三配置yum源">#</a></h2>
+<ol>
+<li>
+<p>备份原有Yum源配置文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mkdir  /etc/yum.repos.d/backup
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cp -r /etc/yum.repos.d/  /etc/yum.repos.d/backup
+</span></span></code></pre></div></li>
+<li>
+<p>配置Yum源：</p>
+<p>1）打开终端或远程登录到云主机。</p>
+<p>2）切换到root用户或以具有sudo特权的用户身份运行以下命令。</p>
+<p>3）进入/etc/yum.repos.d/目录：cd /etc/yum.repos.d/</p>
+<p>4）创建一个新的仓库配置文件，例如local.repo：vi local.repo。</p>
+<p>5）在编辑模式下，添加以下内容到文件中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[myrepo]
+</span></span><span style="display:flex;"><span>name=My Yum Repository
+</span></span><span style="display:flex;"><span>baseurl=http://example.com/yum/repository/
+</span></span><span style="display:flex;"><span>enabled=1
+</span></span><span style="display:flex;"><span>gpgcheck=1
+</span></span><span style="display:flex;"><span>gpgkey=http://example.com/yum/RPM-GPG-KEY-MyRepo
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#解释名词
+</span></span><span style="display:flex;"><span>#name：仓库的名称。
+</span></span><span style="display:flex;"><span>#baseurl：仓库的基本URL，即存储软件包的位置。
+</span></span><span style="display:flex;"><span>#enabled：设置为1以启用仓库。
+</span></span><span style="display:flex;"><span>#gpgcheck：设置为1以启用GPG密钥校验。
+</span></span><span style="display:flex;"><span>#gpgkey：GPG密钥的URL
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#保存和退出：
+</span></span><span style="display:flex;"><span>#按下Esc键退出编辑模式。
+</span></span><span style="display:flex;"><span>#输入:wq保存文件并退出Vi编辑器。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#运行以下命令以清除、更新Yum缓存
+</span></span><span style="display:flex;"><span>yum clean all
+</span></span><span style="display:flex;"><span>yum makecache
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#测试安装检查yum源是否可用,替换package_name为要安装的实际软件包的名称。
+</span></span><span style="display:flex;"><span># yum install package_name
+</span></span><span style="display:flex;"><span>运行 yum repolist 命令，检查已配置的 Yum 源列表是否正确显示。
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="四常见问题及解决方案">四、常见问题及解决方案<a hidden class="anchor" aria-hidden="true" href="#四常见问题及解决方案">#</a></h2>
+<ol>
+<li>
+<p>无法解析软件包名称或版本</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>#  1.错误的软件包名称或版本：请确保您输入的软件包名称和版本号是正确的。验证拼写和版本号是否准确，以及软件包名称是否与仓库中的可用软件包匹配。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  2.无效的Yum源配置：检查您的Yum源配置文件是否正确。验证配置文件中的仓库名称、URL和其他参数是否正确，并确保Yum源服务器可访问。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  3.网络连接问题：如果您的云主机无法连接到Yum源服务器，将无法解析软件包。确保您的主机具有可用的网络连接，并检查防火墙设置是否允许对Yum源的访问。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  4.仓库未启用或已删除：如果您使用的仓库未启用或已删除，Yum将无法找到相应的软件包。检查您的Yum源配置文件中仓库的enabled参数是否设置为1，并确保仓库仍然可用。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  5.Yum缓存失效：Yum会缓存软件包的元数据以提高性能。如果Yum缓存已过期或损坏，可能会导致无法解析软件包。尝试清除Yum缓存并重新生成它，使用以下命令：
+</span></span><span style="display:flex;"><span>yum clean all
+</span></span><span style="display:flex;"><span>yum makecache
+</span></span></code></pre></div></li>
+<li>
+<p>网络连接问题</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>#  1.使用ping命令验证您是否可以与外部服务器进行通信。如果ping命令无法成功，可能是网络配置或连接问题。请检查网络设置、防火墙、代理服务器等，确保网络连接正常。
+</span></span><span style="display:flex;"><span>ping www.baidu.com.com
+</span></span><span style="display:flex;"><span>ping 8.8.8.8
+</span></span><span style="display:flex;"><span>ping  114.114.114.114
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  2.检查DNS设置：Yum源的域名解析依赖于DNS服务器。确保您的主机的DNS设置正确，并且可以解析Yum源服务器的域名。您可以尝试使用nslookup命令来验证域名解析是否正常。例如：
+</span></span><span style="display:flex;"><span>#nslookup yum源服务器的域名
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  3.检查Yum源配置：验证您的Yum源配置是否正确，并且Yum源服务器的URL地址是正确的。检查/etc/yum.repos.d/目录中的配置文件，并确保URL地址可以被主机访问。尝试使用浏览器或curl命令访问Yum源的URL地址，例如
+</span></span><span style="display:flex;"><span>#curl yum源服务器的URL地址
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  4.将Yum源的URL地址更改为其他可用的镜像站点地址。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  5.检查防火墙设置：防火墙规则可能会阻止主机与Yum源服务器之间的通信。确保防火墙允许主机访问Yum源服务器的相关端口（通常是80或443）。
+</span></span></code></pre></div></li>
+<li>
+<p>GPG密钥验证失败</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>#  1.更新GPG密钥：首先，尝试更新GPG密钥。运行以下命令来获取最新的GPG密钥
+</span></span><span style="display:flex;"><span>sudo yum update gnupg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  2.导入缺失的GPG密钥：如果GPG密钥验证失败是因为缺少某个特定仓库的密钥，您可以尝试手动导入缺失的GPG密钥。一般情况下，仓库提供商会在其网站上提供公钥文件。您可以使用rpm命令导入密钥，例如：
+</span></span><span style="display:flex;"><span>sudo rpm --import 公钥文件路径
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  3.禁用GPG密钥验证（不推荐）：如果您确定仓库是可信的，但仍然遇到GPG密钥验证失败的问题，您可以尝试在Yum配置中禁用GPG密钥验证。编辑相应的Yum源配置文件（位于/etc/yum.repos.d/目录中），并在文件的顶部添加或修改gpgcheck参数为0，
+</span></span><span style="display:flex;"><span>gpgcheck=0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  4.解决GPG密钥服务器访问问题：有时，GPG密钥验证失败是因为无法访问密钥服务器。您可以尝试使用代理服务器或更改密钥服务器的URL地址。在Yum源配置文件中查找gpgkey行，将其更改为其他可用的密钥服务器URL地址。
+</span></span></code></pre></div></li>
+<li>
+<p>软件包依赖问题</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>#使用yum命令解决依赖关系   sudo yum install 软件包名称
+</span></span><span style="display:flex;"><span>#手动安装依赖软件包    sudo yum install 缺失的依赖软件包名称
+</span></span><span style="display:flex;"><span>#添加其他软件源   
+</span></span><span style="display:flex;"><span>#升级或降级软件包
+</span></span><span style="display:flex;"><span>#   使用yum update命令升级软件包，或使用yum downgrade命令降级软件包。
+</span></span><span style="display:flex;"><span>#寻求第三方软件源或仓库
+</span></span><span style="display:flex;"><span>#手动编译和安装
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="五最佳实践">五、最佳实践<a hidden class="anchor" aria-hidden="true" href="#五最佳实践">#</a></h2>
+<ol>
+<li>
+<p>使用国内Yum源</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>阿里云 Yum 源
+</span></span><span style="display:flex;"><span>阿里云提供了自己的 Yum 源服务，可以访问 https://mirrors.aliyun.com/yum/ 查看详细信息和配置方法。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>网易（163）Yum 源
+</span></span><span style="display:flex;"><span>网易也提供了 Yum 源服务，可以访问 https://mirrors.163.com/ 查看详细信息和配置方法。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>清华大学 Yum 源
+</span></span><span style="display:flex;"><span>清华大学开源软件镜像站也提供了 Yum 源服务，可以访问 https://mirrors.tuna.tsinghua.edu.cn/help/centos/ 查看详细信息和配置方法。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>中国科学技术大学 Yum 源
+</span></span><span style="display:flex;"><span>中国科学技术大学开源软件镜像站也提供了 Yum 源服务，可以访问 https://mirrors.ustc.edu.cn/help/centos.html 查看详细信息和配置方法。
+</span></span></code></pre></div></li>
+<li>
+<p>定期更新Yum源</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>编辑 Yum 源配置文件：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>打开 /etc/yum.repos.d/ 目录下的 Yum 源配置文件，你可以使用文本编辑器如 Vim 或 Nano 进行编辑。
+</span></span><span style="display:flex;"><span>确保你已经配置了需要更新的 Yum 源，可以是官方源或者你选择的国内镜像源。
+</span></span><span style="display:flex;"><span>运行 Yum 清理命令：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>在更新 Yum 源之前，你可以先运行 yum clean all 命令，清理 Yum 缓存，以确保后续操作能够正常进行。
+</span></span><span style="display:flex;"><span>更新 Yum 源：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>运行 yum makecache 命令，它会更新本地 Yum 缓存，以反映最新的软件包信息和 Yum 源配置。
+</span></span><span style="display:flex;"><span>执行软件包更新：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>如果你希望一并更新系统中已安装的软件包，可以运行 yum update 命令。这将检查可用的更新并安装它们。
+</span></span><span style="display:flex;"><span>检查更新日志（可选）：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>在更新 Yum 源和软件包后，你可以查看系统的更新日志，以了解具体更新了哪些软件包以及可能的重要信息。
+</span></span></code></pre></div></li>
+<li>
+<p>配置多个Yum源</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>#  打开 /etc/yum.repos.d/ 目录，使用文本编辑器创建或编辑新的 Yum 源配置文件，可以使用 .repo 作为文件后缀。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#  选择性地启用或禁用 Yum 源：
+</span></span><span style="display:flex;"><span>#  根据需要选择性地启用或禁用已配置的 Yum 源，可以使用 yum-config-manager --enable &lt;repository&gt; 或 yum-config-manager --disable &lt;repository&gt; 命令。
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="六附录">六、附录<a hidden class="anchor" aria-hidden="true" href="#六附录">#</a></h2>
+<ol>
+<li>
+<p>常用Yum命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>安装指定名称的软件包及其依赖项。
+</span></span><span style="display:flex;"><span>yum install &lt;package_name&gt;：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>更新系统中已安装的所有软件包到最新版本。
+</span></span><span style="display:flex;"><span>yum update：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>卸载指定名称的软件包。
+</span></span><span style="display:flex;"><span>yum remove &lt;package_name&gt;：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>在 Yum 源中搜索包含指定关键字的软件包。
+</span></span><span style="display:flex;"><span>yum search &lt;keyword&gt;：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>列出系统中所有已安装的软件包，或者列出特定软件包的信息。
+</span></span><span style="display:flex;"><span>yum list [&lt;package_name&gt;]：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>显示指定软件包的详细信息，包括版本、大小、依赖关系等。
+</span></span><span style="display:flex;"><span>yum info &lt;package_name&gt;：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>清除 Yum 缓存，包括元数据和软件包。
+</span></span><span style="display:flex;"><span>yum clean all：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>显示当前 Yum 源的列表以及每个源中可用的软件包数量。
+</span></span><span style="display:flex;"><span>yum repolist：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>显示软件包安装、更新和删除的历史记录。
+</span></span><span style="display:flex;"><span>yum history：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>启用指定名称的 Yum 源。
+</span></span><span style="display:flex;"><span>yum-config-manager --enable &lt;repository&gt;：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>禁用指定名称的 Yum 源。
+</span></span><span style="display:flex;"><span>yum-config-manager --disable &lt;repository&gt;：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>显示指定软件包的依赖关系列表。
+</span></span><span style="display:flex;"><span>yum deplist &lt;package_name&gt;：
+</span></span></code></pre></div></li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://neverjia.github.io/second_day/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Second_day</span>
+  </a>
+  <a class="next" href="https://neverjia.github.io/%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86/">
+    <span class="title">Next »</span>
+    <br>
+    <span>信息管理</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'Ctrl\u002bC';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'Ctrl\u002bV';
+            setTimeout(() => {
+                copybutton.innerHTML = 'Ctrl\u002bC';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        
+        
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>
