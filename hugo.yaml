@@ -66,7 +66,9 @@ params:
   description: "MiJia's Blog"
   defaultTheme: auto
   disableThemeToggle: false
-  DateFormat: "2024-03-30"
+  #DateFormat: "2024-03-30"
+  #DateFormat: {{ .Date.Format "2006-01-02" }}
+  DateFormat: "2006-01-02"
   ShowShareButtons: false
   disableSpecialistPost: false
   displayFullLangName: true
