@@ -243,7 +243,6 @@ csi-node-driver-x4f74                     2/2     Running   6 (174m ago)   179d
 ```
 
 
-
 #### 获取 Kubernetes 集群中所有节点的信息。在 Kubernetes 中，节点是集群中的工作节点，用于运行应用程序和容器。
 ```
 [root@kmaster ~]# kubectl get node
