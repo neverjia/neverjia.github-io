@@ -22,7 +22,7 @@ knode1   192.168.230.202 kubectl, kubelet, kube-proxy, docker
 ```
 
 ### 2.系统环境初始化
-> 三台节点配置好主机名及IP地址即可，系统环境配置分别通过脚本完成，y以下为脚本的配置文件
+> 三台节点配置好主机名及IP地址即可，系统环境配置分别通过脚本完成
 
 ```
 [root@kmaster ~]# sh Stream8-k8s-v1.27.0.sh 
@@ -161,7 +161,7 @@ echo "Congratulations ! The basic configuration has been completed"
 [root@kmaster ~]# # kubeadm init --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.27.0 --pod-network-cidr=10.244.0.0/16
 ```
 
-#### 配置环境变量（仅kmaster节点做）
+#### 3.2配置环境变量（仅kmaster节点做）
 ```
 [root@kmaster ~]# mkdir -p $HOME/.kube
 [root@kmaster ~]# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -175,15 +175,10 @@ kmaster   NotReady   control-plane   5m37s   v1.29.2
 ```
 
 ### 将工作节点加入集群
-#### 3.1初始化集群的操作后面的结果,f分别在knode1和knode2执行
+> 3.1初始化集群的操作后面的结果,f分别在knode1和knode2执行
 ```
 kubeadm join 192.168.230.200:6443 --token 6vvi4j.ug2nlgqtl69s9hs6         --discovery-token-ca-cert-hash sha256:7c9f9019a4df5c7377e6f6841fed4de011061501dd18557097b99bbe8a119cfb
 ```
-
-#### 查看集群状态
-kubectl get node
-NotReady
-
 
 #### 安装 Tigera Calico operator 另一个文档tigera-operator-3-26-1.yaml
 > 安装 calico 网络（仅master节点）
@@ -228,7 +223,7 @@ metadata:
 spec: {}
 [root@kmaster ~]# 
 
-
+```
 #### 动态查看calico容器状态，待全部running后，集群状态变为正常
 ```
 [root@kmaster ~]# watch kubectl get pods -n calico-system
@@ -245,7 +240,7 @@ calico-typha-777b6b9fc6-sw7w8             1/1     Running   3 (173m ago)   179d
 csi-node-driver-g7wf2                     2/2     Running   6 (173m ago)   179d
 csi-node-driver-tx4km                     2/2     Running   6 (177m ago)   179d
 csi-node-driver-x4f74                     2/2     Running   6 (174m ago)   179d
-
+```
 
 
 
@@ -316,7 +311,7 @@ registry.aliyuncs.com/google_containers/pause                     3.9           
 
 ```
 
-
+tips:
 ```
 
 Tigera Calico 和 Flannel 都是 Kubernetes 集群中常见的网络解决方案，用于实现 Pod 之间的通信和网络连接。它们之间的区别主要体现在以下几个方面：
