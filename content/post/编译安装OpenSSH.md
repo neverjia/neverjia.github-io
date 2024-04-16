@@ -6,47 +6,55 @@ created: "2024-04-13"
 tags: ["OP"]
 ---
 
+### 环境配置与检查
 
-## 检查主机版本信息
 
 ```
+#检查相关版本信息
 [root@node1 ~]# cat /etc/redhat-release 
 CentOS Linux release 7.9.2009 (Core)
+
 [root@node1 ~]# openssl version
 OpenSSL 1.0.2k-fips  26 Jan 2017
+
 [root@node1 ~]# ssh -V
 OpenSSH_7.4p1, OpenSSL 1.0.2k-fips  26 Jan 2017
 
 ```
 
-相关网站链接
-https://www.openssl.org/source
-https://wwww.openssh.com/
+> 相关网站链接
+> https://www.openssl.org/source
+> https://wwww.openssh.com/
+> http://rpmfind.net
+> wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.7p1.tar.gz
+> wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1w.tar.gz
 
-http://rpmfind.net
 
 
 
+### 编译环境安装
 
-## 该命令的含义是以自动确认的方式安装名为 "Development Tools" 的软件包组。这通常用于设置开发环境，其中包括编译器、调试器和其他开发工具，以便用户能够编译和构建软件。
-
+```
+#该命令的含义是以自动确认的方式安装名为 "Development Tools" 的软件包组。这通常用于设置开发环境，其中包括编译器、调试器和其他开发工具，以便用户能够编译和构建软件。
 [root@node1 ~]# yum groupinstall "Development Tools" -y
 
-## 名称是 perl-core，表示安装 Perl 语言的核心模块和依赖项。
+```
 
+```
+#名称是 perl-core，表示安装 Perl 语言的核心模块和依赖项。
 [root@node1 ~]# yum -y install perl-core 
 
 
 
 [root@node1 ~]# yum install gcc gcc-c++ glibc make autoconf openssl-devel pcre-devel pam-devel perl-core
 
-## 卸载旧的版本
+#卸载旧的版本
 
 [root@node1 ~]# yum remove -y openssl
 
+```
 
-wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.7p1.tar.gz
-wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1w.tar.gz
+
 
 ```
 [root@node1 ~]# wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.7p1.tar.gz
@@ -79,13 +87,10 @@ Saving to: ‘openssl-1.1.1w.tar.gz’
 
 ```
 
-[root@node1 ~]# ll
-total 11476
--rw-------. 1 root root    1244 Nov  1 02:15 anaconda-ks.cfg
--rw-r--r--  1 root root 1848766 Mar 11 06:19 openssh-9.7p1.tar.gz
--rw-r--r--  1 root root 9893384 Jan 30 09:48 openssl-1.1.1w.tar.gz
 
-解压文件
+
+```
+#解压文件
 root@node1 ~]# tar -zxvf openssh-9.7p1.tar.gz 
 [root@node1 ~]# tar -zxvf openssl-1.1.1w.tar.gz 
 
@@ -129,8 +134,8 @@ Creating Makefile
 ***                                                                ***
 
 **********************************************************************
-
-[root@node1 openssl-1.1.1w]# 
+ 
+```
 
 ```
 make #编译-->预计时间3-5分钟
@@ -148,7 +153,7 @@ OpenSSL 1.1.1w  11 Sep 2023
 
 
 ## 安装openssh
-
+```
 cp -r /etc/ssh /root/
 cd openssh-9.7p1/
 yum install zlib* pam-devel -y
@@ -185,10 +190,10 @@ WantedBy=multi-user.target
 
 
 #systemctl restart sshd
-
+```
 
 ## 错误记录
-
+```
 [root@node1 openssh-9.7p1]# systemctl status sshd.service
 ● sshd.service - 0penSSH server daemon
    Loaded: error (Reason: Bad message)
@@ -224,7 +229,7 @@ Apr 02 11:39:02 node1 sshd[74012]: sshd: no hostkeys available -- exiting.
 Apr 02 11:39:02 node1 systemd[1]: Unit sshd.service entered failed state.
 Apr 02 11:39:02 node1 systemd[1]: sshd.service failed.
 
-
+```
 
 
 ## 错误
@@ -303,155 +308,3 @@ perl-core: 是 Perl 语言的核心模块和依赖项。
 
 
 
-系统基础优化
-
-1)系统用户管理优化
-
-2)系统命令提示符优化
-3)系统安全服务优化
-4)系统yum源优化
-  安装系统基础软件包
-5系统字符集优化
-
-6系统时间同步优化
-
-02课程知识回顾
-1)系统安装软件方式4种(yum  rpm 编译   二进制)
-
-2)系统常见日志文件  2个       messages系统服务运行状况  secure记录用户登录信息
-
-3)系统硬件信息查看
-
-CPU   lsblk   /proc/cpuinfo
-
-内存   free -h  /proc/meminfo
-
-磁盘  df  -h     /proc/mounts
-
-负载  w    /proc/loadavg
-
-
-
-
-
-1)系统用户管理优化2)系统命令提示符优化
-3)系统安全服务优化
-4)系统yum源优化
-安装系统基础软件包
-56系统字符集优化系统时间同步优化
-02课程知识回顾
-1)系统安装软件方式4种(yumrpm 编译二进制)2)系统常见日志文件2个消息系统服务运行状况
-
-
-
-
-
-
-
-有多少个CPU
-
-```
-[root@node5 ~]# grep  "physical id"  /proc/cpuinfo
-physical id     : 0
-physical id     : 0
-[root@node5 ~]#
-```
-
-
-
-
-
-去重
-
-[root@node5 ~]# cat test.txt
-a
-a
-a
-a
-a
-a
-b
-c
-d
-e
-b
-c
-d
-e
-b
-c
-d
-e
-b
-c
-d
-e
-b
-c
-d
-e
-b
-c
-d
-e
-[root@node5 ~]# uniq -c  test.txt
-      6 a
-      1 b
-      1 c
-      1 d
-      1 e
-      1 b
-      1 c
-      1 d
-      1 e
-      1 b
-      1 c
-      1 d
-      1 e
-      1 b
-      1 c
-      1 d
-      1 e
-      1 b
-      1 c
-      1 d
-      1 e
-      1 b
-      1 c
-      1 d
-      1 e
-[root@node5 ~]#
-
-
-
-
-
-系统查看系统版本和内核信息
-
-uname -r                           #内核
-
-cat  /etc/redhat-release  #版本
-
-```
-[root@node5 ~]# uname -r
-3.10.0-1160.el7.x86_64
-[root@node5 ~]# cat /etc/redhat-release
-CentOS Linux release 7.9.2009 (Core)
-[root@node5 ~]#
-
-
-
-[root@node5 ~]# uname -a
-Linux node5 3.10.0-1160.el7.x86_64 #1 SMP Mon Oct 19 16:18:59 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-
-```
-
- 
-
-
-
-服务
-
-rsync备份服务
-
-centos6是
