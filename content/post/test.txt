@@ -1,0 +1,180 @@
+---
+title: test
+slug: test
+tags: [ K8s, Docker, Grafana ]
+date: 2023-03-17T20:50:20+08:00
+---
+
+```
+cat  >>/etc/hosts <<'EOF'
+192.168.230.200 kmaster
+192.168.230.201 knode1
+192.168.230.202 knode2
+EOF
+
+```
+### 防火墙初始化
+
+```
+systemctl stop firewalld NetworkManager
+systemctl disable firewalld NetworkManager
+
+sed -ri 's#(SELINUX=).*#\1disabled#' /etc/selinux/config
+setenforce 0
+systemctl disable firewalld && systemctl stop firewalld
+
+
+getenforce 0
+
+#清空所有防火墙规则
+iptables -F
+#删除所有自定义链，即删除所有用户自定义的链
+iptables -X
+#这个命令用于重置所有计数器，即将数据包和字节计数器归零
+iptables -Z
+# 这个命令用于设置默认的转发策略为接受（ACCEPT），即允许所有转发的数据包通过防火墙。-P FORWARD ACCEPT 将转发链的默认策略设置为接受。
+iptables -P FORWARD ACCEPT
+```
+
+### 关闭Swap
+k8s默认禁用swap功能
+```
+swapoff -a
+# 防止开机自动挂载 swap 分区
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+
+### 六、脚本(有些未验证，无法实现)
+
+## 1.统计登录的用户有哪些
+
+```
+###统计当前 Linux 系统中可以登录的账户有多少个
+grep "bash$" /etc/passwd | wc -l
+或者
+awk -F: '/bash$/{print $1}' /etc/passwd
+——————————
+###将对应在/etc/shadow 中第二列密码提出处理
+user=$(awk -F: '/bash$/{print $1}' /etc/passwd)
+for i in $user
+do
+awk -F: -v x=$i '$1==x{print $1,$2}' /etc/shadow
+done
+```
+
+## 2.查看当前连接到本地的远程IP地址
+
+```
+netstat -tn | awk '{print $5}' | cut -d: -f1 | sort | uniq
+
+这个命令的含义是：
+netstat -tn：显示所有TCP连接的详细信息。
+awk '{print $5}'：提取输出中的第五列，即远程IP地址和端口号。
+cut -d: -f1：使用冒号作为分隔符，只提取IP地址部分。
+sort：对IP地址进行排序。
+uniq：去除重复的IP地址。
+——————————
+
+netstat -atn  |  awk  '{print $5}'  | awk  '{print $1}' | sort -nr  |  uniq -c
+
+这个命令的含义是：
+netstat -atn：显示当前系统的所有网络连接，包括TCP和UDP协议的连接。
+awk ‘{print $5}’：使用awk命令提取netstat命令输出的结果中的第5列，该列显示了与当前系统建立连接的远程主机的IP地址和端口号。
+awk ‘{print $1}’：使用awk命令进一步提取第5列中的IP地址部分，去除端口号。
+sort -nr：对提取出的IP地址进行排序，-n参数表示按照数字大小排序，-r参数表示降序排序。
+uniq -c：统计并去除重复的IP地址，并计算每个IP地址的出现次数。
+
+```
+
+## 3.检测是都为超级管理员
+
+```
+#!/bin/bash
+
+# 检查当前用户是否为root用户
+if [ $(id -u) -eq 0 ]; then
+    echo "当前用户是超级管理员(root)"
+else
+    echo "当前用户不是超级管理员"
+fi
+```
+
+## 4.检测指定目录下是否存在对应文件’
+
+```
+#!/bin/bash
+
+# 指定目录
+directory="/path/to/directory"
+
+# 检查文件是否存在
+if [ -e "$directory/filename" ]; then
+    echo "文件存在"
+else
+    echo "文件不存在"
+fi
+
+——————————
+或者使用：
+#!/bin/bash
+ 
+if [ -f /path/to/directory/filename ]
+then 
+echo "File exists"
+fi
+
+```
+
+
+
+## 5.查找僵尸进程
+
+```
+#!/bin/bash
+#awk 判断 ps 命令输出的第 8 列为 Z 是，显示该进程的 PID 和进程命令
+ps aux | awk ‘{if($8 == “Z”){print $2,$11}}’
+
+该命令的作用是:
+
+通过ps aux命令获取系统中所有进程的详细信息，并将输出结果通过管道传递给awk命令进行处理。
+在awk命令中，通过if条件判断进程的状态是否为”Z”（僵尸进程），如果是，则打印出进程的ID和进程名。
+
+```
+
+## 6.获取本机MAC地址
+
+```
+ip a s |awk 'BEGIN{print "本机 MAC 地址信息如下:"}/^[0-9]/{print $2;getline;if($0~/link\/ether/){print 
+$2}}' |grep -v lo:
+
+该命令用于查看本机的MAC地址信息。具体解释如下：
+
+ip a s：显示网络接口的配置信息。
+awk 'BEGIN{print "本机 MAC 地址信息如下:"}：在输出之前，打印出提示信息。
+/^[0-9]/{print $2;getline;if($0~/link\/ether/){print $2}}'：对每一行进行匹配和处理。
+/^[0-9]/：匹配以数字开头的行，即网络接口的行。
+{print $2}：打印出第二列，即网络接口的名称。
+getline：读取下一行。
+if($0~/link\/ether/)：如果当前行包含”link/ether”，则执行以下语句。
+{print $2}：打印出第二列，即MAC地址。
+grep -v lo:：过滤掉包含”lo:”的行，即排除本地回环接口的信息。
+
+
+
+
+
+
+
+
+
+
+
+
+```
+yum search  strace
+  451  2024-01-06 21:47:38 yum -y install trace
+  452  2024-01-06 21:47:45 yum -y install strace
+  453  2024-01-06 21:48:00 strace --help
+```
+
+```
