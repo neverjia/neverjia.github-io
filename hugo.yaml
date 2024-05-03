@@ -20,6 +20,10 @@ permalinks:
   post: ":slug"
 menu:
   main:
+#  - identifier: tags
+#      name: Tags
+#      url: /tags
+#      weight: 5
     - identifier: archives
       name: Archives
       url: /archives/
@@ -112,6 +116,7 @@ params:
     minMatchCharLength: 0
     keys: ["content"]
 taxonomies:
+#  tag: tags
 
 markup:
   goldmark:
