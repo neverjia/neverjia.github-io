@@ -195,7 +195,7 @@ yum -y install gcc gcc-c++ pcre pcre-devel gd-devel openssl openssl-devel zlib z
 
 ```
 useradd nginx
-wget httP://nginx.org/download/nginx-1.26.0.tar.gz
+wget http://nginx.org/download/nginx-1.26.0.tar.gz
 tar xvf nginx-1.6.0.tar.gz
 cd nginx-1.16.0/
 
@@ -453,7 +453,7 @@ tcp    LISTEN     0      128       *:80                    *:*                  
 
 ```
 
-### 7.正式开始写ngin.conf文件
+### 7.正式开始写nginx.conf文件
 
 ```
 #一个server就类似于一个主机，这样分开写，方便后期进行维护
@@ -788,7 +788,7 @@ curl -I http://192.168.230.174
 ```
 
 #### 观察nginx服务器的日志
-
+##### 这是反代的访问日志
 ```
 [root@node1 logs]# pwd
 /usr/local/nginx/logs
@@ -801,10 +801,20 @@ curl -I http://192.168.230.174
 ```
 
 
+#####  这是客户端192.168.230.174的日志，访问的客户端信息来自反代的访问192.168.230.173而不是本地Windows192.168.230.1
+
+cat /var/log/nginx/host.access.log
 
 
+#### 访问方向
+```
+client---->反代服务器------>转发到web服务器
+```
 
 
-
-
-
+#### nginx proxy具体配置
+```
+proxy_pass:真实后端服务器的地址，可以是ip也可以是域名和ur1地址proxy_redirect :如果真实服务器使用的是的真实IP:非默认端口。则改成IP:默认端口。proxy_set_header:重新定义或者添加发往后端服务器的请求头proxy_set_header X-Rea1-IP $remote_addr;#只记录连接服务器的上一个ip地址信息。proxy_set_header X-Forwarded-For $proxy_add_x_forwarded for: #通过这个选项可以记录真正客户端机器的ip地址
+proxy_connect timeout::后端服务器连接的超时时间发起三次握手等候响应超时时间proxy_send_timeout:后端服务器数据回传时间，就是在规定时间之内后端服务器必须传完所有的数据
+proxy_read_timeout:nginx接收upstream(上游/真实)server数据超时，默认60s，如果连续的60s内没有收到1个字节，连接关闭。像长连接
+```
