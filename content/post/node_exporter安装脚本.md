@@ -7,6 +7,26 @@ created: "2024-05-05"
 tags: ["node_exporter"]
 ---
 
+## 编写安装脚本
+> 需要将脚本保存为一个文件。通常，Shell脚本文件以 .sh 为扩展名
+```
+#1.这里将下面的脚本命名为node_exporter.sh
+
+#2.赋予执行权限
+chmod +x node_exporter.sh
+
+#3.运行脚本
+##  直接运行
+./node_exporter.sh
+
+## 使用shell命令执行
+bash node_exporter.sh
+
+
+```
+
+脚本内容如下：
+
 ```
 #!/bin/bash
 #1 firewall & selinux这是测试环境可以关闭，生成环境不建议。
