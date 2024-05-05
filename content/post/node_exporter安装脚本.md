@@ -51,10 +51,17 @@ yum install -y yum-utils vim bash-completion net-tools wget
 #下载node_exporter安装包
 #wget  https://github.com/prometheus/node_exporter/releases/download/v1.8.0/node_exporter-1.8.0.linux-amd64.tar.gz
 
+# 设置版本号变量
 VERSION=1.8.0
-wget   https://github.com/prometheus/node_exporter/releases/download/V${VERSION}/node_exporter-${VERSION}.linux-amd64.tar.gz
-tar -xzvf node_exporter-${VERSION}.linux-amd64.tar.gzmv node_exporter-${VERSION}.1inux-amd64 /usr/local/node_exporter/
-mv node_exporter-1.8.0.linux-amd64 /usr/local/node_exporter/
+# 使用wget命令下载指定版本的node_exporter安装包
+wget -q https://github.com/prometheus/node_exporter/releases/download/v${VERSION}/node_exporter-${VERSION}.linux-amd64.tar.gz
+# 解压下载的tar.gz文件
+tar -xzvf node_exporter-${VERSION}.linux-amd64.tar.gz
+
+# 移动解压后的目录至/usr/local/node_exporter/
+mv node_exporter-${VERSION}.linux-amd64 /usr/local/node_exporter/
+
+# 修改属主和属组为root（如果需要的话）
 chown -R root:root /usr/local/node_exporter/
 
 #自启配置文件 
@@ -79,6 +86,18 @@ EOF
 #开机自启
 systemctl daemon-reload
 systemctl enable node_exporter.service && systemctl start node_exporter.service
+
+# 例如，创建软链接到bin路径（如果需要全局可执行）
+# ln -s /usr/local/node_exporter/node_exporter /usr/local/bin/node_exporter
+# 启动node_exporter（确保安装并配置了systemd或其它初始化系统）
+# 示例systemd服务单元文件操作：
+# cp /usr/local/node_exporter/node_exporter.service /etc/systemd/system/
+# systemctl daemon-reload
+# systemctl start node_exporter
+# systemctl enable node_exporter
+#查看监听状态
+ss -tunlp | grep 9100
+
 
 #查看监听状态
 ss -tunlp | grep 9100
