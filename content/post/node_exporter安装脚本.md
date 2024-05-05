@@ -87,7 +87,7 @@ EOF
 systemctl daemon-reload
 systemctl enable node_exporter.service && systemctl start node_exporter.service
 
-# 例如，创建软链接到bin路径（如果需要全局可执行）
+# 创建软链接到bin路径（如果需要全局可执行）
 # ln -s /usr/local/node_exporter/node_exporter /usr/local/bin/node_exporter
 # 启动node_exporter（确保安装并配置了systemd或其它初始化系统）
 # 示例systemd服务单元文件操作：
@@ -99,7 +99,5 @@ systemctl enable node_exporter.service && systemctl start node_exporter.service
 ss -tunlp | grep 9100
 
 
-#查看监听状态
-ss -tunlp | grep 9100
 
 ```
