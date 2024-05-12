@@ -54,7 +54,7 @@ yum install -y yum-utils vim bash-completion net-tools wget
 # 设置版本号变量
 VERSION=1.8.0
 # 使用wget命令下载指定版本的node_exporter安装包
-wget -q https://github.com/prometheus/node_exporter/releases/download/v${VERSION}/node_exporter-${VERSION}.linux-amd64.tar.gz
+wget  https://github.com/prometheus/node_exporter/releases/download/v${VERSION}/node_exporter-${VERSION}.linux-amd64.tar.gz
 # 解压下载的tar.gz文件
 tar -xzvf node_exporter-${VERSION}.linux-amd64.tar.gz
 
