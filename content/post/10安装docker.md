@@ -3,7 +3,7 @@ title: "安装docker"
 slug: "安装docker"
 date: "2024-06-05"
 created: "2024-06-05"
-tags: ["volume"]
+tags: ["docker"]
 ---
 
 
