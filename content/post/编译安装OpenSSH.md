@@ -1,10 +1,4 @@
----
-title: "编译安装OpenSSH"
-slug: "编译安装OpenSSH"
-date: "2024-04-16"
-created: "2024-04-13"
-tags: ["OP"]
----
+
 
 ### 环境配置与检查
 
