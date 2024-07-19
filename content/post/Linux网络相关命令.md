@@ -6,10 +6,7 @@ created: "2024-04-13"
 tags: ["OP"]
 ---
 
-
-Linux网络命令
-
-
+# Linux网络命令
 
 ```
 ip
@@ -37,8 +34,6 @@ iftop
 tcpdump
 ifplugstatus
 ```
-
-
 
 ## ip
 

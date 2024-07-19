@@ -7,18 +7,64 @@ tags: [k8s]
 
 
 ### 1.环境准备
-> 学会安装，应用部署，不断加入新组件，理解该组件能解决什么问题
 - 准备3台机器
+```
+[root@kmaster ~]# cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.230.210 kmaster
+192.168.230.211 knode1
+192.168.230.212 knode2
+
+#设置
+scp  /etc/hosts knode1:/etc/
+scp  /etc/hosts knode2:/etc/
+```
+
+修改主机名
+```
+hostnamectl set-hostname kmaster
+hostnamectl set-hostname knode1
+hostnamectl set-hostname knode2
+```
+
+
+
 
 - 系统初始化配置
+
+配置静态IP
+```
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
+[root@kmaster ~]# cat /etc/sysconfig/network-scripts/ifcfg-ens160
+TYPE=Ethernet
+BOOTPROTO=none
+NAME=ens160
+DEVICE=ens160
+ONBOOT=yes
+IPADDR=192.168.230.210
+NETMASK=255.255.255.0
+GATEWAY=192.168.230.2
+DNS1=192.168.230.2
+[root@kmaster ~]#
+```
+重启网卡信息
+```
+[root@localhost network-scripts]# nmcli conn reload
+[root@localhost network-scripts]# nmcli conn down ens33 && nmcli conn up ens33
+Connection 'ens33' successfully deactivated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/1)
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/2)
+
+```
+
 
 ```
 #确保三台机器，的跨节点的容器互相通信， Tigera Calico operator
 主机名、节点ip、部署组件
 # k8s kubeadm 一键自动化，安装k8s集群，安装所有运行需要的组件
-kmaster  192.168.230.200  kubectl, kubelet, kube-proxy, docker
-knode1   192.168.230.201 kubectl, kubelet, kube-proxy, docker
-knode1   192.168.230.202 kubectl, kubelet, kube-proxy, docker
+kmaster  192.168.230.210  kubectl, kubelet, kube-proxy, docker
+knode1   192.168.230.211 kubectl, kubelet, kube-proxy, docker
+knode1   192.168.230.212 kubectl, kubelet, kube-proxy, docker
 ```
 
 ### 2.系统环境初始化
@@ -177,7 +223,12 @@ kmaster   NotReady   control-plane   5m37s   v1.29.2
 ### 将工作节点加入集群
 > 3.1初始化集群的操作后面的结果,f分别在knode1和knode2执行
 ```
-kubeadm join 192.168.230.200:6443 --token 6vvi4j.ug2nlgqtl69s9hs6         --discovery-token-ca-cert-hash sha256:7c9f9019a4df5c7377e6f6841fed4de011061501dd18557097b99bbe8a119cfb
+#直接生成token，用一下命令
+[root@kmaster ~]# kubeadm token create --print-join-command
+kubeadm join 192.168.230.210:6443 --token 5n1nfv.jvy6ltevszz557au --discovery-token-ca-cert-hash sha256:7198d5a0615ff1cb18e1000143bf36ec77631a5d8a604128c39ac13270ec186e 
+[root@kmaster ~]# 
+
+kubeadm join 192.168.230.210:6443 --token 6vvi4j.ug2nlgqtl69s9hs6         --discovery-token-ca-cert-hash sha256:7c9f9019a4df5c7377e6f6841fed4de011061501dd18557097b99bbe8a119cfb
 ```
 
 #### 安装 Tigera Calico operator 另一个文档tigera-operator-3-26-1.yaml
@@ -328,6 +379,25 @@ Flannel：Flannel 使用 Overlay 网络来传输数据包，它将 Pod 的 IP �
 Tigera Calico：Calico 提供了丰富的网络策略（Network Policies）功能，允许管理员定义和控制 Pod 之间的流量规则，实现细粒度的网络隔离和安全性。
 Flannel：Flannel 本身并不提供网络策略功能，但可以与其他网络策略实现（如 Calico 的网络策略）配合使用，以实现网络隔离和安全性。
 总的来说，Tigera Calico 适用于大规模、高性能、需要复杂网络策略的 Kubernetes 集群，而 Flannel 更适合于小型或中型规模的集群，以及对网络性能要求不那么高、不需要复杂网络策略的场景。
+
+
+```
+
+
+```
+
+https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
+```
+
+
+### 问题
+> 镜像原因
+> calico/cni镜像一直下载不成功
+```
+#将 image: docker.io/calico/cni:v3.25.0 更改为其他镜像源
+kubectl edit daemonset calico-node -n kube-system
+image: quay.io/calico/cni:v3.25.0
+
 
 
 ```
